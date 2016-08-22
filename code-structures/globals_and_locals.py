@@ -6,6 +6,6 @@ def local_func():
     var2 = 494.2
     print("LOCALS:",locals())
 
-local_func()z
+local_func()
 
 print('GLOBALS', globals())
