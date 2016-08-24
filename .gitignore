@@ -28,3 +28,6 @@ out/
 
 # Gradle
 .gradle/
+
+# Python
+__pycache__/
