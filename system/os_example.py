@@ -1,4 +1,4 @@
-import os
+import os, shutil
 
 print(os.path.exists('oops.txt'))
 print(os.path.exists('relativity'))
@@ -30,3 +30,18 @@ os.chmod('relativity', 0o755)
 # uid = 5
 # gid = 22
 # os.chown('relativity', uid, gid)
+
+# Removing of files
+#os.remove('relativity')
+#print(os.path.exists('relativity'))
+
+# make directory
+os.mkdir('gravity', 0o755)
+print(os.path.isdir('gravity'))
+shutil.copy('relativity', 'gravity/relativity_copied')
+print(os.listdir('gravity'))
+
+# remove directory only if it's empty
+#os.rmdir('gravity')
+
+
