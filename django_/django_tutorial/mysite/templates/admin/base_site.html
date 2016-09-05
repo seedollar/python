@@ -1,0 +1,10 @@
+<!-- We override the default DJANGO Admin base_site.html page and provide our own page title -->
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">DJANGO MY-SITE Administration Tutorial</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
