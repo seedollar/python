@@ -31,6 +31,8 @@ out/
 
 # Python
 __pycache__/
+htmlcov/
+*.coverage
 
 #SQL Lite
 *.sqlite3
