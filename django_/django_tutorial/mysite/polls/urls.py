@@ -1,11 +1,14 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
 
 app_name = 'polls'
 urlpatterns = [
+    url('^signin', views.signin, name='signin'),
     # example: /polls/
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.landing, name='landing'),
+    # example: /polls/dashboard
+    url(r'^dashboard/$', views.IndexView.as_view(), name='dashboard'),
     # example: /polls/5/
     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
     # example: /polls/5/results
