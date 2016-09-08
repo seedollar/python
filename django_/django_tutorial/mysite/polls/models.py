@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 import datetime
 
+from sqlalchemy.ext import orderinglist
+
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -79,4 +81,21 @@ class Restaurant(models.Model):
     def __str__(self):
         return "%s Restaurant" % self.place.name
 
+# =========================== MODEL META Options ======================================
+# This example shows how you can add a Meta class to your Model class to provide more functionality.
+# The models below show how you can create an abstract model, and how it's implementation can override it's parent Meta class
+
+class CommonInfo(models.Model):
+    label = models.CharField(max_length=255)
+    visible = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True # This will make the CommonInfo entity abstract, and will not create a table for it.
+        ordering = ["label"]
+
+class Product(CommonInfo):
+    description = models.CharField(max_length=255)
+
+    class Meta(CommonInfo.Meta):
+        db_table = 'product_info'
 
