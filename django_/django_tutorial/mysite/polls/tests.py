@@ -3,6 +3,8 @@ from django.test import TestCase
 from .models import Question, Choice
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 
 # Define a helper method to create new questions and persist them
@@ -13,7 +15,9 @@ def create_question(question_text, days):
 
 class QuestionMethodTests(TestCase):
     def test_index_view_with_no_questions(self):
-        response = self.client.get(reverse('polls:index'))
+        User.objects.create_user(username='test', password ='password')
+        self.client.(username='test', password='test')
+        response = self.client.get(reverse('polls:landing'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No polls are available")
         self.assertQuerysetEqual(response.context['latest_question_list'], [])
