@@ -1,9 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import datetime
-
-from sqlalchemy.ext import orderinglist
-
+from .poll_manager import PollManager
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -48,6 +46,9 @@ class Pizza(models.Model):
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+
+    # To override the default manager name (objects), we create a new field
+    peeps = models.Manager()
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -139,6 +140,7 @@ class Blog(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=200)
     email = models.EmailField()
+    age = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -157,3 +159,46 @@ class Entry(models.Model):
 
     def __str__(self):
         return self.headline
+
+
+# =========================== ONLINE BOOKSTORE MODEL ======================================
+class Publisher(models.Model):
+    name = models.CharField(max_length=300)
+    num_awards = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+
+class Book(models.Model):
+    name = models.CharField(max_length=300)
+    pages = models.IntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    rating = models.FloatField()
+    authors = models.ManyToManyField(Author)
+    publisher = models.ForeignKey(Publisher)
+    pub_date = models.DateField()
+
+    def __str__(self):
+        return self.name
+
+
+class Store(models.Model):
+    name = models.CharField(max_length=300)
+    books = models.ManyToManyField(Book)
+    registered_users = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.name
+
+# =========================== USED BY custom PollManager class  ======================================
+class OpinionPoll(models.Model):
+    question = models.CharField(max_length=200)
+    poll_date = models.DateField()
+    objects = PollManager()
+
+
+class Response(models.Model):
+    poll = models.ForeignKey(OpinionPoll, on_delete=models.CASCADE)
+    person_name = models.CharField(max_length=50)
+    response = models.TextField()
