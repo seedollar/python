@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
 import datetime
-from .poll_manager import PollManager
+from .custom_managers import PollManager, DahlBookManager, PersonManager
+from .custom_querysets import PersonQuerySet
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -46,9 +47,12 @@ class Pizza(models.Model):
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    role = models.CharField(max_length=1, choices=(('A', 'Author'), ('E', 'Editor')), default='E')
 
     # To override the default manager name (objects), we create a new field
     peeps = models.Manager()
+    people = PersonManager() # custom manager which uses the custom PersonQuerySet
+    mense = PersonQuerySet.as_manager() # same a above, except we don't need to reference the PersonManager.
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -179,6 +183,9 @@ class Book(models.Model):
     publisher = models.ForeignKey(Publisher)
     pub_date = models.DateField()
 
+    objects = models.Manager()
+    dahl_books = DahlBookManager() # Add a custom manager to filter on "Roald Dahl" author books
+
     def __str__(self):
         return self.name
 
@@ -202,3 +209,11 @@ class Response(models.Model):
     poll = models.ForeignKey(OpinionPoll, on_delete=models.CASCADE)
     person_name = models.CharField(max_length=50)
     response = models.TextField()
+
+
+class AnotherPerson(models.Model):
+    first = models.CharField(max_length=100)
+    last = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "%s %s" % (self.first, self.last)
