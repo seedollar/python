@@ -15,4 +15,10 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/results/$', views.ResultsView.as_view(), name='results'),
     # example: /polls/5/vote
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
+    # The url mappings used to illustrate how ATOMIC_REQUESTS is used.
+    url(r'^transactions/atomic_request/success$', views.atomic_request_success, name='atomic_request_success'),
+    url(r'^transactions/atomic_request/rollback$', views.atomic_request_rollback, name='atomic_request_rollback'),
+    url(r'^transactions/atomic_request/skip$', views.atomic_request_skip, name='atomic_request_skip'),
+    # The url mappings used to illustrate how @transaction.atomic is used
+    url(r'^transactions/atomic', views.transaction_atomic_view, name="transaction_atomic")
 ]

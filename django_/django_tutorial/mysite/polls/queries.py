@@ -2,6 +2,7 @@ from django.db.models import F
 from django.db.models import Q
 from django.db import models, connection
 from .models import Entry, Person
+from collections import namedtuple
 
 
 # Use this custom class to document how to make queries.
@@ -99,7 +100,6 @@ class EntryManager(models.Manager):
 
 # This custom manager will illustrate how we can execute RAW SQL statements in Django
 class RawSQLManager(models.Manager):
-
     # This snippet shows how you can invoke the raw() method with a plain SQL statement.
     # It will return a RawQuerySet object.
     def get_all_persons(self):
@@ -124,3 +124,20 @@ class RawSQLManager(models.Manager):
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM polls_book WHERE rating > %s", [rating])
             return cursor.fetchall()
+
+    # This example shows how you can return a dictionary of field names and their values
+    def get_books_for_rating(self, rating):
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM polls_book WHERE rating = %s", [rating])
+            # Extract the column names from the cursor
+            columns = [col[0] for col in cursor.description]
+            # list comprehension that will extract each row
+            return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    # An example of how we can process the cursor results and transform it into a namedtuple
+    def get_books_namedtuple(self):
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM polls_book")
+            desc = cursor.description
+            nt_result = namedtuple('Result', [col[0] for col in desc])
+            return [nt_result(*row) for row in cursor.fetchall()]

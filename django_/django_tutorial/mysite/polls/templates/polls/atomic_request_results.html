@@ -1,0 +1,18 @@
+{% if outcome_message %}<h1>Outcome: {{ outcome_message }}</h1>{% endif %}
+
+{% if outcome_message == 'SUCCESS' %}
+<br/>
+<label>TOTAL PIZZA COUNT: {{ pizza_count }}</label>
+<br/>
+<label>TOTAL TOPPING COUNT: {{ topping_count }}</label>
+<br/>
+<h3>Pizza - {{ pizza.name }}</h3>
+<h3>Topping Size - {{ pizza.toppings.count }}</h3>
+
+<ul>
+    {% for top in pizza.toppings.all %}
+    <li>{{ top.ingredient }} - {{ top.perishable_date }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
