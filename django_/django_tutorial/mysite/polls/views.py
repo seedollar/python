@@ -220,7 +220,7 @@ def transaction_atomic_view(request):
             save_a_book()
             raise MockRollbackError  # force rollback on book
     except MockRollbackError:
-        pass # We don't do anything here
+        pass  # We don't do anything here
 
     save_a_topping()
 
@@ -236,4 +236,52 @@ def transaction_atomic_view(request):
                       "after_pizza_count": after_pizza_count,
                       "after_topping_count": after_topping_count,
                       "after_book_count": after_book_count,
+                  })
+
+
+# =====================================================================================================================
+# =====================================================================================================================
+# transaction - savepoint() example
+# =====================================================================================================================
+# =====================================================================================================================
+# This example will illustrate how to use the transaction savepoint functions. You are required to pass
+# in a flag to either keep Pizza B or not using the request param 'keep' which requires values 'y' or 'n'
+#
+# http://localhost:8000/polls/transactions/savepoint?keep=y
+@transaction.atomic
+def transaction_savepoint_view(request):
+
+    # Take a snapshot of the current Pizza record count
+    pizza_count_before = Pizza.objects.count()
+
+    # Tenary operator
+    keep_b = True if request.GET['keep'] == 'y' else False
+    # Use this flag to illustrate how savepoints work, either true or false
+
+    pizza_A = Pizza(name='SavePoint Pizza A')
+    pizza_A.save()
+    # pizza_A is part of the transaction now
+
+    savepoint_id = transaction.savepoint()
+    # Create a savepoint which generates an ID
+
+    pizza_B = Pizza(name='SavePoint Pizza B')
+    pizza_B.save()
+    # pizza_B is now part of the transaction
+
+    if keep_b:
+        # pizza_A and pizza_B will be committed
+        transaction.savepoint_commit(savepoint_id)
+    else:
+        # Rollback to the savepoint before pizza_B, which means pizza_B will be removed from the transaction.
+        transaction.savepoint_rollback(savepoint_id)
+
+    # Take a snapshot of the Pizza record count
+    pizza_count_after = Pizza.objects.count()
+
+    return render(request, "polls/transaction_savepoint_results.html",
+                  {
+                      'keep_b': keep_b,
+                      'pizza_count_before': pizza_count_before,
+                      'pizza_count_after': pizza_count_after,
                   })

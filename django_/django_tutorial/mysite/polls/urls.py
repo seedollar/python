@@ -20,5 +20,7 @@ urlpatterns = [
     url(r'^transactions/atomic_request/rollback$', views.atomic_request_rollback, name='atomic_request_rollback'),
     url(r'^transactions/atomic_request/skip$', views.atomic_request_skip, name='atomic_request_skip'),
     # The url mappings used to illustrate how @transaction.atomic is used
-    url(r'^transactions/atomic', views.transaction_atomic_view, name="transaction_atomic")
+    url(r'^transactions/atomic', views.transaction_atomic_view, name="transaction_atomic"),
+    # The url mappings used to illustrate how the transaction savepoint functions is used
+    url(r'^transactions/savepoint', views.transaction_savepoint_view, name="transaction_savepoint")
 ]

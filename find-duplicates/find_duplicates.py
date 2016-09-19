@@ -1,4 +1,4 @@
-fin = open("numbers.txt", "rt")
+fin = open("numbers_new.txt", "rt")
 
 numbers = fin.readlines()
 
