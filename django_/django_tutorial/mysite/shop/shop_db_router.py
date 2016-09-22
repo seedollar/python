@@ -7,6 +7,10 @@ class ShopDBRouter(object):
         return None
 
     def db_for_write(self, model, **hints):
+        # Make sure we write to the 'default' database when we write Properties models
+        if model._meta.model_name == 'properties':
+            return None;
+
         if model._meta.app_label == 'shop':
             return 'shop-db'
         elif model._meta.app_label == 'polls':
@@ -19,6 +23,10 @@ class ShopDBRouter(object):
     def allow_migrate(self, db, app_label, model_name=None, **hints):
 
         print(">>>>>>>>>>>>>db=%s, app_label=%s, model_name=%s" % (db, app_label, model_name))
+
+        # We make sure that the properties table is replicated on both databases.
+        if app_label == 'shop' and model_name == 'properties':
+            return None
 
         if app_label == 'shop':
             return db == 'shop-db'

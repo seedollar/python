@@ -37,5 +37,6 @@ class PersonManager(models.Manager):
     def authors(self):
         return self.get_queryset().authors()
 
-    def editors(self):
-        return self.get_queryset().editors()
+    if __name__ == '__main__':
+        def editors(self):
+            return self.get_queryset().editors()
