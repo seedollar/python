@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
+    'shop.apps.ShopConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,9 +81,19 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ATOMIC_REQUESTS': True,
-    }
+    },
+    'shop-db': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'python_shop',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'USER': 'test',
+        'PASSWORD': 'test',
+        'ATOMIC_REQUESTS': True,
+    },
 }
 
+DATABASE_ROUTERS = ['shop.shop_db_router.ShopDBRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
